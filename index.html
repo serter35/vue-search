@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Frontal Creative Search</title>
+    <link rel="stylesheet" href="dist/f-creative-search.css" type="text/css">
+</head>
+<body>
+    <div id="app">
+        <f-creative-search
+                :wrapper-prop="{ id: 'fcs-wrapper', class: '' }"
+                :input-prop="{ id: 'fcs-input', class: 'bla', value: '' }"
+                :xhr-options="{ url: 'https://jsonplaceholder.typicode.com/posts', query: 'search' }"
+                search-key="title"
+                :emit-to-window-func="true"
+        >Buraya birşeyler yazarak test edebilirsiniz.</f-creative-search>
+        <ul id="list"></ul>
+    </div>
+
+    <script>
+        var myConstructor = function (data, elIdName) {
+            this.el   = document.getElementById(elIdName);
+            this.data = data;
+        }
+        myConstructor.prototype.remover = function () {
+            var el = this.el;
+            while (el.firstChild) {
+                el.removeChild(el.firstChild)
+            }
+            return this;
+        }
+        myConstructor.prototype.creator = function () {
+            var el   = this.el,
+                data = this.data;
+            data.forEach(item => {
+                var li = document.createElement('li');
+                var liText = document.createTextNode(item.title)
+                li.appendChild(liText)
+                li.className = 'list-item';
+                el.appendChild(li);
+            })
+            return this;
+        }
+
+        window.fCreativeSearchCallback = function (data, status) {
+            console.log(data, status)
+            var fetch = new myConstructor(data, 'list');
+            fetch.remover().creator();
+        }
+    </script>
+    <script src="dist/f-creative-search.js"></script>
+</body>
+</html>
